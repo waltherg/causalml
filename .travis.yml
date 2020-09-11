@@ -1,11 +1,25 @@
 language: python
 
+python:
+    - 2.7
+    - 3.4
+    - 3.5
+    - 3.6
+    - 3.7
+    - 3.8
+
 install:
     - pip install -U pip
     - pip install -r requirements.txt
     - pip install -r requirements-test.txt
     - python setup.py build_ext --inplace
     - python setup.py install
+
+stages:
+    - test
+    - fossa
+
+script: echo "Skip global script..."
 
 before_script:
     - "curl -H 'Cache-Control: no-cache' https://raw.githubusercontent.com/fossas/fossa-cli/master/install.sh | sudo bash"
@@ -14,13 +28,6 @@ jobs:
     include:
         - stage: test
           name: test
-          python:
-            - "2.7"
-            - "3.4"
-            - "3.5"
-            - "3.6"
-            - "3.7"
-            - "3.8"
           script: pytest -sv
         - stage: fossa
           # FOSSA_API_KEY unavailable for pull requests
